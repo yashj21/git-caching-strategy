@@ -19,17 +19,24 @@ To test in a local Jenkins instance
 mvn hpi:run
 ----
 
+This dev is done to fix :
+https://issues.jenkins.io/browse/JENKINS-44729
 
 This plugin is under development.
 
-To run this plugin checkout my fork of git plugin (CachingStrategy.java is an extension point created) and git caching strategy
+To run this plugin checkout my fork of git plugin (CachingStrategy.java is an extension point created) under branch Feature-Add-Caching-Behaviour and git caching strategy
 into your workspace, perform mvn clean install on both and mvh hpi:run on git caching strategy.
 
-Due to the complexity of UI and not much understanding, my Initial implementation considers a list of cacheStrategies as a property 
+Due to the complexity of UI, my Initial implementation considers a list of cacheStrategies as a property 
 of GitSCM class, then upon further analysis I felt it to be misplaced and found it fit's perfectly GitSCMSource's property so that each
 instance of GitSCM can be injected these property via AbstractGITSCMBuilder, this was requiring alot of modifications on existing codebase
-at the same I also had a thought of integrating the functionality as additional behaviours and now with basic understanding of UI, I tried to implementing
+at the same finally, now integrating the functionality as additional behaviours now with basic understanding of UI, I tried to implementing
 it as part GitExtensions, (this right now seems the best choice) as the whole point of extension points are to tweak
 the behaviour of GitSCM.
+If you want to run this on your local machine: 
+You should make sure to build git-plugin in my repo, under branch name Feature-Add-Caching-Behaviour
+This plugin just has a single extension right now, but there can be multiple behavioural strategies added.
+It is similar in architecture to basic-branch-build-strategies-plugins.
 
-Current status: It is able to perform a git clone at a specific locations
+Current status: It is able to perform a git clone at a specific locations once and future builds on the agent would try to check for the cache.
+Considerations: If in future GitPublisher starts publishing changes for tags multi branch projects from agents, there might be unforeseeable write contention issues.
